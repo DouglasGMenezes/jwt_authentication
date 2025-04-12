@@ -3,8 +3,8 @@ package com.douglas.project.jwt_auth_api.domain.user;
 
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -20,11 +20,11 @@ public class User implements UserDetails {
     private UUID id;
     private String login;
     private String password;
-    private String role;
+    private UserRole role;
 
     public User() {};
 
-    public User(String password, String role, String login, UUID id) {
+    public User(String password, UserRole role, String login, UUID id) {
         this.password = password;
         this.role = role;
         this.login = login;
@@ -43,6 +43,7 @@ public class User implements UserDetails {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
 
     public UUID getId() {
         return id;
@@ -68,20 +69,24 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public String getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
-
 
     // UserDetails config //
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        if(this.role == UserRole.ADMIN)
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"));
+        else
+            return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
