@@ -24,12 +24,12 @@ public class User implements UserDetails {
 
     public User() {};
 
-    public User(String password, UserRole role, String login, UUID id) {
+    public User(String login, String password, UserRole role) {
+        this.login = login;
         this.password = password;
         this.role = role;
-        this.login = login;
-        this.id = id;
     }
+
 
     @Override
     public boolean equals(Object o) {
@@ -113,6 +113,5 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 
 }

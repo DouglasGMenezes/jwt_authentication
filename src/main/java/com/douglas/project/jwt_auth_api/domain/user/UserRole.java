@@ -1,9 +1,8 @@
 package com.douglas.project.jwt_auth_api.domain.user;
 
 public enum UserRole {
-
-    ADMIN("admin"),
-    USER("user");
+    ADMIN("ADMIN"),
+    USER("USER");
 
     private String role;
 
@@ -14,4 +13,5 @@ public enum UserRole {
     public String getRole(){
         return role;
     }
+
 }
