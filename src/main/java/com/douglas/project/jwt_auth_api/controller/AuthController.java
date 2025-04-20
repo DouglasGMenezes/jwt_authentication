@@ -1,19 +1,18 @@
 package com.douglas.project.jwt_auth_api.controller;
 
-import com.douglas.project.jwt_auth_api.domain.user.AuthDTO;
-import com.douglas.project.jwt_auth_api.domain.user.RegisterDTO;
+import com.douglas.project.jwt_auth_api.domain.dto.AuthDTO;
+import com.douglas.project.jwt_auth_api.domain.dto.LoginrRsDTO;
+import com.douglas.project.jwt_auth_api.domain.dto.RegisterDTO;
+import com.douglas.project.jwt_auth_api.domain.dto.UserDTO;
 import com.douglas.project.jwt_auth_api.domain.user.User;
-import com.douglas.project.jwt_auth_api.domain.user.UserDTO;
-import com.douglas.project.jwt_auth_api.repository.UserRepository;
 import com.douglas.project.jwt_auth_api.service.AuthService;
+import com.douglas.project.jwt_auth_api.service.TokenService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,11 +23,15 @@ public class AuthController {
 
     private AuthenticationManager authenticationManager;
     private AuthService authService;
+    private final TokenService tokenService;
 
-    public AuthController(AuthenticationManager authenticationManager , AuthService authService) {
+    public AuthController(AuthenticationManager authenticationManager , AuthService authService, TokenService tokenService) {
         this.authenticationManager = authenticationManager;
         this.authService = authService;
+        this.tokenService = tokenService;
     }
+
+
 
     @GetMapping("/users")
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -40,8 +43,9 @@ public class AuthController {
     public ResponseEntity login(@RequestBody @Valid AuthDTO data){
         var userNamePassword = new UsernamePasswordAuthenticationToken(data.login(), data.password());
         var auth = this.authenticationManager.authenticate(userNamePassword);
-
-        return ResponseEntity.ok().build();
+        User user = (User) auth.getPrincipal();
+        String token = tokenService.generateToken(user);
+        return ResponseEntity.ok(new LoginrRsDTO(token));
     }
 
     @PostMapping("/register")

@@ -1,8 +1,8 @@
 package com.douglas.project.jwt_auth_api.service;
 
-import com.douglas.project.jwt_auth_api.domain.user.RegisterDTO;
+import com.douglas.project.jwt_auth_api.domain.dto.RegisterDTO;
 import com.douglas.project.jwt_auth_api.domain.user.User;
-import com.douglas.project.jwt_auth_api.domain.user.UserDTO;
+import com.douglas.project.jwt_auth_api.domain.dto.UserDTO;
 import com.douglas.project.jwt_auth_api.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

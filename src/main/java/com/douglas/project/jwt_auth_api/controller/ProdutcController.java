@@ -19,7 +19,6 @@ public class ProdutcController {
     @PostMapping
     public ResponseEntity postProduct(@RequestBody @Valid ProductRqDTO body){
         Product newProduct = new Product(body);
-
         this.repository.save(newProduct);
         return ResponseEntity.ok().build();
     }
@@ -27,7 +26,6 @@ public class ProdutcController {
     @GetMapping
     public ResponseEntity getAllProducts(){
         List<ProductRsDTO> productList = this.repository.findAll().stream().map(ProductRsDTO::new).toList();
-
         return ResponseEntity.ok(productList);
     }
 }
