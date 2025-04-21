@@ -3,6 +3,8 @@ package com.douglas.project.jwt_auth_api.service;
 import com.douglas.project.jwt_auth_api.domain.dto.RegisterDTO;
 import com.douglas.project.jwt_auth_api.domain.user.User;
 import com.douglas.project.jwt_auth_api.domain.dto.UserDTO;
+import com.douglas.project.jwt_auth_api.infra.exceptions.InvalidUserExceptions;
+import com.douglas.project.jwt_auth_api.infra.exceptions.NotFoundExceptions;
 import com.douglas.project.jwt_auth_api.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,7 +28,6 @@ public class AuthService implements UserDetailsService {
         return userRepository.findByLogin(username);
     }
 
-
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll()
                 .stream()
@@ -34,9 +35,9 @@ public class AuthService implements UserDetailsService {
                 .toList();
     }
 
-    public void register(RegisterDTO data) throws IllegalAccessException {
+    public void register(RegisterDTO data) {
         if (userRepository.findByLogin(data.login()) != null) {
-            throw new IllegalAccessException("Usuário já existe.");
+            throw new InvalidUserExceptions();
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(data.password());
         User user = new User(data.login(), encryptedPassword , data.role());
@@ -47,7 +48,7 @@ public class AuthService implements UserDetailsService {
     public void deleteUser(String login) {
         User user = (User) userRepository.findByLogin(login);
         if (user == null) {
-            throw new UsernameNotFoundException("Usuário não encontrado.");
+            throw new NotFoundExceptions();
         }
         userRepository.delete(user);
     }

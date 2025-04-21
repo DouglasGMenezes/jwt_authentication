@@ -50,22 +50,15 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody @Valid RegisterDTO data) {
-        try {
             authService.register(data);
-                return ResponseEntity.ok("Usuário cadastrado com sucesso.");
-        } catch (IllegalAccessException e) {
-                return ResponseEntity.badRequest().body("Usuario invalido ou já existente.");
-        }
+            return ResponseEntity.ok("Usuário cadastrado com sucesso.");
     }
 
     @DeleteMapping("/delete/{login}")
     public ResponseEntity<String> deleteUser(@PathVariable String login) {
-        try {
             authService.deleteUser(login);
             return ResponseEntity.ok("Usuário deletado com sucesso!");
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
     }
 
 
